@@ -12,5 +12,6 @@ router.route("/categories")
 
 router.route("/categories/:id")
   .get(show)
+  .put(update)
 
 export default router

@@ -11,7 +11,7 @@ router.route("/tasks")
 
 router.route("/tasks/:id")
   .get(show)
-  .post(update)
+  .put(update)
   .delete(destroy)
 
 export default router;

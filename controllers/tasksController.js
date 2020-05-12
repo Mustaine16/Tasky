@@ -56,10 +56,11 @@ const controller = {
 
       //verificate the task exists
       if (task) {
-        await Task.update(
+        const taskUpdated = await Task.update(
           { title, description, categoryId },
           { where: { id: taskId } }
         );
+        res.json({taskUpdated})
       } else {
         res.send("task not found");
       }
@@ -75,7 +76,7 @@ const controller = {
 
       if(task){
         const taskDeleted = await Task.destroy({where:{id:taskId}})
-        res.json(taskDeleted)
+        res.json({taskDeleted :task})
       }else{
         res.send("Task not found")
       }

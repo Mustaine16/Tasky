@@ -15,16 +15,16 @@ const controller = {
   },
   show: async (req, res) => {
     try {
-      const {id} = req.params
-      const category = await Category.findByPk(id) 
+      const { id } = req.params;
+      const category = await Category.findByPk(id);
 
-      if(category){
-        res.json({category})
-      }else{
-        res.send("Category not found")
+      if (category) {
+        res.json({ category });
+      } else {
+        res.send("Category not found");
       }
     } catch (error) {
-      errorHandler(res,error)
+      errorHandler(res, error);
     }
   },
   create: async (req, res) => {
@@ -36,7 +36,26 @@ const controller = {
       errorHandler(res, error);
     }
   },
-  update: async (req, res) => {},
+  update: async (req, res) => {
+    try {
+
+      const { id } = req.params;
+      const { title } = req.body;
+
+      const category = await Category.findByPk(id);
+
+      if (category) {
+        const categoryUpdated = await Category.update({ title }, { where: { id },returning:true });
+        /*res.redirect(`/categories/${id}`)*/ 
+        res.json({categoryUpdated});
+      } else {
+        res.send("category not found");
+      }
+
+    } catch (error) {
+      errorHandler(res, error);
+    }
+  },
   destroy: async (req, res) => {},
 };
 
