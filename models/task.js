@@ -40,9 +40,15 @@ export default (sequelize, DataTypes) => {
     }
   );
   Task.associate = function (models) {
+
     Task.belongsTo(models.user, {
       as: "user",
       foreignKey: "userId",
+    });
+
+    Task.belongsTo(models.category, {
+      as: "category",
+      foreignKey: "categoryId",
     });
   };
   return Task;

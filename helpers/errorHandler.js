@@ -1,9 +1,11 @@
-export default function (res,err) {
+export default function (res, err) {
   console.log(err);
   if (err.errors) {
     const errors = err.errors.map((err) => err.message);
-    res.json({ errors });
+    res.status(400).json({ errors });
   } else {
-    res.json( {err} );
+    res
+      .status(500)
+      .json({ errors: { name: err.name, detail: err.original.detail } });
   }
 }

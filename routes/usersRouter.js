@@ -1,6 +1,6 @@
 import {Router} from "express"
 
-import controller from "../controllers/registersController"
+import controller from "../controllers/usersController"
 
 let router = Router();
 

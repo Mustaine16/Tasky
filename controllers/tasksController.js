@@ -33,9 +33,14 @@ const controller = {
   show: async (req, res) => {
     try {
       const taskId = req.params.id;
-      const task = await Task.findByPk(taskId);
+      const task = await Task.findByPk(taskId, {
+        include: [
+          { model: "user", attributes: ["name","email"] },
+          { model: "category",attributes: ["id","title"] },
+        ],
+      });
       console.log(task);
-      
+
       if (task) {
         res.json({ task });
       } else {
@@ -58,9 +63,9 @@ const controller = {
       if (task) {
         const taskUpdated = await Task.update(
           { title, description, categoryId },
-          { where: { id: taskId } }
+          { where: { id: taskId }, returning:true }
         );
-        res.json({taskUpdated})
+        res.json({ taskUpdated });
       } else {
         res.send("task not found");
       }
@@ -68,20 +73,20 @@ const controller = {
       errorHandler(res, error);
     }
   },
-  destroy: async (req,res) => {
+  destroy: async (req, res) => {
     try {
-      const taskId = req.params.id
+      const taskId = req.params.id;
 
-      const task = await Task.findByPk(taskId)
+      const task = await Task.findByPk(taskId);
 
-      if(task){
-        const taskDeleted = await Task.destroy({where:{id:taskId}})
-        res.json({taskDeleted :task})
-      }else{
-        res.send("Task not found")
+      if (task) {
+        const taskDeleted = await Task.destroy({ where: { id: taskId } });
+        res.json({ taskDeleted: task });
+      } else {
+        res.send("Task not found");
       }
     } catch (error) {
-      errorHandler(res,error)
+      errorHandler(res, error);
     }
   },
 };

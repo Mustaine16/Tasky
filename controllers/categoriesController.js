@@ -38,25 +38,43 @@ const controller = {
   },
   update: async (req, res) => {
     try {
-
       const { id } = req.params;
       const { title } = req.body;
 
       const category = await Category.findByPk(id);
 
       if (category) {
-        const categoryUpdated = await Category.update({ title }, { where: { id },returning:true });
-        /*res.redirect(`/categories/${id}`)*/ 
-        res.json({categoryUpdated});
-      } else {
-        res.send("category not found");
-      }
+        const categoryUpdated = await Category.update(
+          { title },
+          { where: { id }, returning: true }
+        );
+        /*res.redirect(`/categories/${id}`)*/
 
+        res.json({ categoryUpdated });
+      } else {
+        res.json({ message: "category not found" });
+      }
     } catch (error) {
       errorHandler(res, error);
     }
   },
-  destroy: async (req, res) => {},
+  destroy: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const category = await Category.findByPk(id);
+
+      if (category) {
+        const categoryTitle = category.dataValues.title;
+        const categoryDestroyed = await Category.destroy({ where: { id } });
+        res.json({ categoryDestroyed: categoryTitle });
+      } else {
+        res.json({ message: "category not found, can't destroy" });
+      }
+    } catch (error) {
+      errorHandler(res, error);
+    }
+  },
 };
 
 export default controller;

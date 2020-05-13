@@ -13,5 +13,6 @@ router.route("/categories")
 router.route("/categories/:id")
   .get(show)
   .put(update)
+  .delete(destroy)
 
 export default router

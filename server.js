@@ -1,20 +1,22 @@
 import express, {json} from "express"
+import cors from "cors"
 import methodOverride from "method-override"
 import morgan from 'morgan'
 
 //Routes 
-import registersRouter from "./routes/registersRouter"
+import usersRouter from "./routes/usersRouter"
 import tasksRouter from "./routes/tasksRouter"
 import categoriesRouter from "./routes/categoriesRouter"
 
 const app = express()
 
 app.use(morgan('dev'))
+app.use(cors())
 app.use(methodOverride('_method'))
 app.use(json())
 
 //Routes
-app.use(registersRouter)
+app.use(usersRouter)
 app.use(tasksRouter)
 app.use(categoriesRouter)
 
