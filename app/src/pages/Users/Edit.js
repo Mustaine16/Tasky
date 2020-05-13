@@ -1,18 +1,21 @@
 import React from "react";
+import {useParams} from "react-router-dom"
 
-import useForm from "../../hooks/useSubmitForm";
-import "./css/Signup.css";
+import useSubmitForm from "../../hooks/useSubmitForm";
+import "./css/Form.css";
 
-const Signup = () => {
+const Edit = () => {
   
-  const [handleInputChange, handleSubmit] = useForm();
+  const [handleInputChange, handleSubmit] = useSubmitForm();
+  const {id} = useParams()
+  const URL = `http://localhost:3000/users/${id}`
 
   return (
     <form
-      action="http://localhost:3000/users"
+      action= {URL}
       method="POST"
       onSubmit={handleSubmit}
-      name="signupForm"
+      name="editForm"
     >
       <div className="form-control">
         <label htmlFor="text">Name</label>
@@ -27,18 +30,9 @@ const Signup = () => {
           onChange={handleInputChange}
         />
       </div>
-      <div className="form-control">
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          onChange={handleInputChange}
-        />
-      </div>
       <input type="submit" value="Sign Up" />
     </form>
   );
 };
 
-export default Signup;
+export default Edit;

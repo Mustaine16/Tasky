@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useForm = () => {
+const useSubmitForm = () => {
   const [inputs, setInputs] = useState({});
 
   const handleInputChange = (e) => {
@@ -41,4 +41,4 @@ const useForm = () => {
   return [handleInputChange, handleSubmit];
 };
 
-export default useForm;
+export default useSubmitForm;
