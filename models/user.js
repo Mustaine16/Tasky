@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: {
-            args: [2, 20],
-            msg: "Your name must be at least 2 characters long",
+            args: [2, 30],
+            msg: "Your name must have between 2 and 30 characters",
           },
           notEmpty: { args: true, msg: "name cannot be empty" },
           notNull: { args: true, msg: "name cannot be null" },
@@ -53,6 +53,39 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.task, {
       as: "tasks",
     });
+  };
+
+  User.prototype.authenticatePassword = function (password) {
+    return new Promise((res, rej) => {
+      bcrypt.compare(password, this.password_hash, function (err, valid) {
+        if (err) return rej(err);
+
+        return res(valid);
+      });
+    });
+  };
+
+  User.login = async function (email, password) {
+
+    try {
+      //Buscar al usuario
+      const user = await User.findOne({
+        where: {
+          email,
+        },
+      });
+
+      /* console.log(user) */
+
+      if (!user) return null;
+
+      const valid = await user.authenticatePassword(password);
+      console.log({ valid: valid });
+      
+      return valid ? user : null;
+    } catch (error) {
+      return error;
+    }
   };
 
   User.beforeCreate(function (user, options) {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useSubmitForm = () => {
+const useSubmitForm = (contextAction = () => console.log("hola")) => {
   const [inputs, setInputs] = useState({});
 
   const handleInputChange = (e) => {
@@ -12,9 +12,8 @@ const useSubmitForm = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
     const URL = e.currentTarget.action;
-    const METHOD = e.currentTarget.method
+    const METHOD = e.currentTarget.method;
     const formData = JSON.stringify(inputs);
 
     fetch(URL, {
@@ -29,13 +28,22 @@ const useSubmitForm = () => {
         return res.json();
       })
       .then((result) => {
-        result.errors ? console.log("ERROR") : console.log("OK");
+        if (result.errors) {
+          console.log("ERROR");
+        }else{
+          console.log("OK");
+          contextAction(result);
+
+        }
+        //Exec the dispatcher
         console.log(result);
       })
       .catch((err) => {
         console.log("ERROR CLIENTE");
         console.log(err);
       });
+
+    e.preventDefault();
   };
 
   return [handleInputChange, handleSubmit];

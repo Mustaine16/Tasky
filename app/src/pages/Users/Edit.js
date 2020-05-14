@@ -1,37 +1,30 @@
 import React from "react";
-import {useParams} from "react-router-dom"
+import { useParams } from "react-router-dom";
 
+//Context and Hook
+import { useUserContext } from "../../context/userContext";
 import useSubmitForm from "../../hooks/useSubmitForm";
-import "./css/Form.css";
+
+import Form from "../../components/Form/Form";
+import FormInput from "../../components/Form/FormInput";
+import FormSubmitButton from "../../components/Form/FormSubmitButton";
 
 const Edit = () => {
-  
-  const [handleInputChange, handleSubmit] = useSubmitForm();
-  const {id} = useParams()
-  const URL = `http://localhost:3000/users/${id}`
+
+  const { actions: { editUser } } = useUserContext();
+
+  const [handleInputChange, handleSubmit] = useSubmitForm(editUser);
+
+  const { id } = useParams();
+  const action = `http://localhost:3000/users/${id}?_method=PUT`;
+  const method = "POST";
 
   return (
-    <form
-      action= {URL}
-      method="POST"
-      onSubmit={handleSubmit}
-      name="editForm"
-    >
-      <div className="form-control">
-        <label htmlFor="text">Name</label>
-        <input type="text" name="name" id="text" onChange={handleInputChange} />
-      </div>
-      <div className="form-control">
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          onChange={handleInputChange}
-        />
-      </div>
-      <input type="submit" value="Sign Up" />
-    </form>
+    <Form action={action} method={method} onSubmit={handleSubmit}>
+      <FormInput name="name" onChange={handleInputChange} />
+      <FormInput name="email" onChange={handleInputChange} />
+      <FormSubmitButton value="Save Changes" />
+    </Form>
   );
 };
 

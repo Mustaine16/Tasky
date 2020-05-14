@@ -20,10 +20,9 @@ export default (sequelize, DataTypes) => {
       },
       categoryId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         validate: {
-          notEmpty: { args: true, msg: "Category cannot be empty" },
-          notNull: { args: true, msg: "Category cannot be null" },
+          notEmpty: { args: true, msg: "Category cannot be empty" }
         },
       },
       userId: {
@@ -44,11 +43,14 @@ export default (sequelize, DataTypes) => {
     Task.belongsTo(models.user, {
       as: "user",
       foreignKey: "userId",
+      onDelete: "CASCADE"
     });
 
     Task.belongsTo(models.category, {
       as: "category",
       foreignKey: "categoryId",
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL"
     });
   };
   return Task;

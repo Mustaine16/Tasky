@@ -22,12 +22,12 @@ module.exports = {
       },
       categoryId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "categories",
           id: "id"
         },
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         onUpdate: "CASCADE",
       },
       userId: {

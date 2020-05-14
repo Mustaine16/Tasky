@@ -1,4 +1,6 @@
 import { task as Task } from "../models";
+import { user as User } from "../models";
+import { category as Category } from "../models";
 import errorHandler from "../helpers/errorHandler";
 
 const controller = {
@@ -35,8 +37,8 @@ const controller = {
       const taskId = req.params.id;
       const task = await Task.findByPk(taskId, {
         include: [
-          { model: "user", attributes: ["name","email"] },
-          { model: "category",attributes: ["id","title"] },
+          { model: User, as: "user", attributes: ["name", "email"] },
+          { model: Category, as: "category", attributes: ["id", "title"] },
         ],
       });
       console.log(task);
@@ -63,7 +65,7 @@ const controller = {
       if (task) {
         const taskUpdated = await Task.update(
           { title, description, categoryId },
-          { where: { id: taskId }, returning:true }
+          { where: { id: taskId }, returning: true }
         );
         res.json({ taskUpdated });
       } else {

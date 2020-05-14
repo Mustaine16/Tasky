@@ -59,12 +59,19 @@ const controller = {
       const user = await User.findByPk(id);
 
       if (user) {
-        const userUpdated = await User.update(
+        const updatedUser = await User.update(
           { name, email },
           { where: { id }, returning: true }
         );
 
-        res.json({ userUpdated });
+          //Verificar que se generaron cambios
+          if(updatedUser.length > 1){
+            res.json({ updatedUser: updatedUser[1][0] });
+          }else{
+            res.json({updatedUser})
+          }
+
+
       } else {
         res.json({ message: "user not found" });
       }
