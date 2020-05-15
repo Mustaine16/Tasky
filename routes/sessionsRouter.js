@@ -4,6 +4,9 @@ import controller from "../controllers/sessionsController"
 
 const router = Router()
 
-router.post("/sessions",controller.create)
+router.route("/sessions")
+  .get(controller.show)
+  .post(controller.create)
+  .delete(controller.destroy)
 
 export default router

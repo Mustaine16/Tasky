@@ -13,7 +13,6 @@ const controller = {
         res.send("It looks like nobody registered yet");
       }
     } catch (error) {
-      
       errorHandler(res, error);
     }
   },
@@ -48,7 +47,7 @@ const controller = {
       const newUser = await User.create({ name, email, password });
       res.status(200).json({ newUser });
     } catch (error) {
-      console.log(req.body)
+      console.log(req.body);
       errorHandler(res, error);
     }
   },
@@ -64,14 +63,12 @@ const controller = {
           { where: { id }, returning: true }
         );
 
-          //Verificar que se generaron cambios
-          if(updatedUser.length > 1){
-            res.json({ updatedUser: updatedUser[1][0] });
-          }else{
-            res.json({updatedUser})
-          }
-
-
+        //Verificar que se generaron cambios
+        if (updatedUser.length > 1) {
+          res.json({ updatedUser: updatedUser[1][0] });
+        } else {
+          res.json({ updatedUser });
+        }
       } else {
         res.json({ message: "user not found" });
       }
@@ -93,7 +90,7 @@ const controller = {
     } catch (error) {
       errorHandler(res, error);
     }
-  },
+  }
 };
 
 export default controller;
