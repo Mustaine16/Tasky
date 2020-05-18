@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 
-import "./Form.css"
+import "./Form.css";
 
-function Form({children,action,method, onSubmit}){
-  return(
+function Form({ children, action, method, onSubmit }) {
+  return (
     <form
       action={action}
       method={method}
       onSubmit={onSubmit}
-      encType='application/json'
+      encType="application/json"
     >
       {children}
     </form>
-  )
+  );
 }
 
-export default Form
+export default Form;

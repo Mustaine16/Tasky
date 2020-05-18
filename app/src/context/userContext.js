@@ -21,8 +21,14 @@ const userReducer = (state, action) => {
     case "GET_USER":
       return {
         ...state,
-        user:action.payload
-      }
+        user: action.payload,
+      };
+
+    case "LOGIN_USER":
+      return {
+        ...state,
+        user: action.payload,
+      };
 
     default:
       return state;
@@ -32,34 +38,43 @@ const userReducer = (state, action) => {
 const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialState);
 
-  function createUser({newUser}) {
+  function createUser({ newUser }) {
     dispatch({
       type: "CREATE_USER",
-      payload:newUser,
+      payload: newUser,
     });
   }
 
-  function editUser({updatedUser}) {
+  function editUser({ updatedUser }) {
     dispatch({
       type: "EDIT_USER",
       payload: updatedUser,
     });
   }
 
-  function getUser({user}){
+  function getUser({ user }) {
     dispatch({
       type: "GET_USER",
-      payload: user
-    }) 
+      payload: user,
+    });
   }
+
+  function loginUser({ user }) {
+    dispatch({
+      type: "LOGIN_USER",
+      payload: user,
+    });
+  }
+
   return (
     <UserContext.Provider
       value={{
         state,
         actions: {
           createUser,
+          loginUser,
           editUser,
-          getUser
+          getUser,
         },
       }}
     >
@@ -68,12 +83,12 @@ const UserProvider = ({ children }) => {
   );
 };
 
-function useUserContext(){
-  const context = React.useContext(UserContext)
-  if(context === undefined){
-    throw new Error('useUserContext must be used within a UserContextProvider')
+function useUserContext() {
+  const context = React.useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUserContext must be used within a UserContextProvider");
   }
-  return context
+  return context;
 }
 
-export {UserProvider, useUserContext}
+export { UserProvider, useUserContext };

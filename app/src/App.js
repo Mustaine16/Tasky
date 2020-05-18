@@ -5,6 +5,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { UserProvider } from "./context/userContext";
 
 //Components
+import Login from "./pages/Users/Login";
 import Signup from "./pages/Users/Signup";
 import Edit from "./pages/Users/Edit";
 
@@ -13,8 +14,9 @@ function App() {
     <BrowserRouter>
       <Switch>
         <UserProvider>
-          <Route exact path={"/users/signup"} component={Signup}></Route>
-          <Route exact path={"/users/:id/edit"} component={Edit}></Route>
+          <Route exact path={"/login"} component={Login}></Route>
+          <Route exact path={"/signup"} component={Signup}></Route>
+          <Route exact path={"/user/:id/edit"} component={Edit}></Route>
         </UserProvider>
       </Switch>
     </BrowserRouter>

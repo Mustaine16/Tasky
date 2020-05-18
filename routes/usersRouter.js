@@ -3,17 +3,19 @@ import authCheck from "../middlewares/authCheck"
 import authUser from "../middlewares/authUser"
 import authAdmin from "../middlewares/authAdmin"
 
-import controller from "../controllers/usersController"
+import controller  from "../controllers/usersController"
+
+const {find,index,show,create,update,destroy} = controller 
 
 let router = Router();
 
 router.route("/users")
-  .get(authCheck,authAdmin,controller.index)
-  .post(controller.create)
+  .get(authCheck,authAdmin,index)
+  .post(create)
 
 router.route("/users/:id")
-  .get(authCheck,authUser,controller.show)
-  .put(authCheck,authUser,controller.update)
-  .delete(authCheck,authUser,controller.destroy)
+  .get(authCheck,authUser,find,show)
+  .put(authCheck,authUser,update)
+  .delete(authCheck,authUser,destroy)
 
 export default router

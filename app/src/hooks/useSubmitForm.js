@@ -1,6 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import {Redirect} from "react-router-dom"
 
-const useSubmitForm = (contextAction = () => console.log("hola")) => {
+const useSubmitForm = (contextAction) => {
   const [inputs, setInputs] = useState({});
 
   const handleInputChange = (e) => {
@@ -30,12 +31,12 @@ const useSubmitForm = (contextAction = () => console.log("hola")) => {
       .then((result) => {
         if (result.errors) {
           console.log("ERROR");
-        }else{
+        } else {
           console.log("OK");
+          //Exec the dispatcher
           contextAction(result);
-
+          return <Redirect to="/edit"/>
         }
-        //Exec the dispatcher
         console.log(result);
       })
       .catch((err) => {
