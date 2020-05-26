@@ -12,20 +12,18 @@ module.exports = (sequelize, DataTypes) => {
             args: [2, 30],
             msg: "Your name must have between 2 and 30 characters",
           },
-          notEmpty: { args: true, msg: "name cannot be empty" },
           notNull: { args: true, msg: "name cannot be null" },
         },
       },
       email: {
         type: DataTypes.STRING,
+        allowNull: false,
         unique: {
           args: true,
           msg: "There is an account associated with this email",
         },
-        allowNull: false,
         validate: {
           isEmail: { args: true, msg: "You must insert a valid email" },
-          notEmpty: { args: true, msg: "email cannot be empty" },
           notNull: { args: true, msg: "email cannot be null" },
         },
       },
@@ -37,12 +35,15 @@ module.exports = (sequelize, DataTypes) => {
             args: [6, 30],
             msg: "your password must be at least 6 characters long",
           },
-
-          notEmpty: { args: true, msg: "password cannot be empty" },
           notNull: { args: true, msg: "password cannot be null" },
         },
       },
       password_hash: DataTypes.STRING,
+      role: {
+        type: DataTypes.ENUM,
+        values: ['user', 'admin'],
+        defaultValue: "user"
+      },
     },
     {
       tableName: "users",
@@ -66,7 +67,6 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.login = async function (email, password) {
-
     try {
       //Buscar al usuario
       const user = await User.findOne({
@@ -81,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
 
       const valid = await user.authenticatePassword(password);
       console.log({ valid: valid });
-      
+
       return valid ? user : null;
     } catch (error) {
       return error;
@@ -89,7 +89,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.beforeCreate(function (user, options) {
-    return new Promise((resolve, reject) => {
+    const hashPassword = new Promise((resolve, reject) => {
       bcrypt.hash(user.password, 10, function (err, hash) {
         if (err) {
           console.log(err);
@@ -100,6 +100,19 @@ module.exports = (sequelize, DataTypes) => {
         }
       });
     });
+
+    const setAdmin = new Promise((resolve, reject) => {
+      User.findOne({})
+        .then((users) => {
+          if (!users) {
+            user.role = "admin";
+            user.save();
+          }
+        })
+        .then((user) => resolve());
+    });
+
+    return Promise.all([hashPassword, setAdmin]);
   });
 
   return User;

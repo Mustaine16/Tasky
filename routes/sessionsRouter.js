@@ -1,12 +1,11 @@
-import {Router} from "express"
+import { Router } from "express";
 
-import controller from "../controllers/sessionsController"
+import controller from "../controllers/sessionsController";
 
-const router = Router()
+const router = Router();
+const { login, generateToken, sendToken } = controller;
 
 router.route("/sessions")
-  .get(controller.show)
-  .post(controller.create)
-  .delete(controller.destroy)
+   .post(login, generateToken, sendToken);
 
-export default router
+export default router;

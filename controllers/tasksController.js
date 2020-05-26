@@ -1,29 +1,37 @@
 import { task as Task } from "../models";
 import { user as User } from "../models";
 import { category as Category } from "../models";
+
+import paramsBuilder from "../helpers/paramsBuilder";
 import errorHandler from "../helpers/errorHandler";
 
+const validParams = ["title", "description", "categoryId"];
+
 const controller = {
-  new: (req, res) => {
-    res.send("working");
-  },
-  create: async (req, res) => {
+  
+  //Finder middleware
+  find: async function (req, res, next) {
     try {
-      const { title, description, categoryId, userId } = req.body;
-      const newTask = await Task.create({
-        title,
-        description,
-        categoryId,
-        userId,
+      const id = Number(req.params.id);
+
+      const task = await Task.findByPk(id, {
+        include: [
+          { model: User, as: "user", attributes: ["id", "name", "email"] },
+          { model: Category, as: "category", attributes: ["id", "title"] },
+        ],
       });
 
-      res.json({
-        newTask,
-      });
+      if (!task) return next(new Error("Task not found"));
+
+      req.task = task;
+      req.mainObj = task;
+
+      return next();
     } catch (error) {
-      errorHandler(res, error);
+      next(error);
     }
   },
+
   index: async (req, res) => {
     try {
       const tasks = await Task.findAll();
@@ -32,30 +40,38 @@ const controller = {
       errorHandler(res, error);
     }
   },
-  show: async (req, res) => {
-    try {
-      const taskId = req.params.id;
-      const task = await Task.findByPk(taskId, {
-        include: [
-          { model: User, as: "user", attributes: ["name", "email"] },
-          { model: Category, as: "category", attributes: ["id", "title"] },
-        ],
-      });
-      console.log(task);
 
-      if (task) {
-        res.json({ task });
-      } else {
-        res.send("Task not found");
-      }
+  show: (req, res) => {
+    if (req.task) {
+      res.json({ task: req.task });
+    } else {
+      return res.status(404).json({"message": "Task not found"})
+    }
+  },
+
+  create: async (req, res) => {
+    try {
+      //Create with the user owner as param
+      const params = paramsBuilder(req.body, validParams)
+      params["userId"] = req.authUser.id
+
+      const newTask = await Task.create(params);
+
+      res.json({
+        newTask
+      });
+
     } catch (error) {
       errorHandler(res, error);
     }
   },
+
   update: async (req, res) => {
     try {
-      const taskId = req.params.id;
-      const { title, description, categoryId } = req.body;
+      const taskId = Number(req.params.id);
+
+      const params = paramsBuilder(req.body, validParams)
+      
 
       const task = await Task.findByPk(taskId);
 
@@ -64,7 +80,7 @@ const controller = {
       //verificate the task exists
       if (task) {
         const taskUpdated = await Task.update(
-          { title, description, categoryId },
+          params,
           { where: { id: taskId }, returning: true }
         );
         res.json({ taskUpdated });
@@ -75,6 +91,7 @@ const controller = {
       errorHandler(res, error);
     }
   },
+
   destroy: async (req, res) => {
     try {
       const taskId = req.params.id;

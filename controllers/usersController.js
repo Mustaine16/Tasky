@@ -1,34 +1,40 @@
 import { user as User } from "../models";
 import { task as Task } from "../models";
 
-import {paramsBuilder} from "../helpers/paramsBuilder";
+import paramsBuilder from "../helpers/paramsBuilder";
 import errorHandler from "../helpers/errorHandler";
 
-const validParams = ["name", "email", "password"]
+const validParams = ["name", "email", "password"];
 
 const controller = {
 
   find: async (req, res, next) => {
-    const { id } = req.params;
-    User.findByPk(id)
+    const id = Number(req.params.id);
+
+    User.findByPk(id, {
+      attributes: ["id", "name", "email"],
+      include: [
+        {
+          model: Task,
+          as: "tasks",
+        },
+      ],
+    })
       .then((user) => {
+        if (!user) return res.status(404).json({ message: "User not found" });
 
-        if (!user)
-
-          return next();
-
-        console.log(user);
-          
         req.user = user;
-        return next();
+        req.mainObj = user;
+        req.mainObj.userId = user.id;
 
+        return next();
       })
       .catch((err) => next(err));
   },
 
   index: async (req, res) => {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({attributes:["id","name","email","role"]});
 
       if (users) {
         res.json({ users });
@@ -40,55 +46,29 @@ const controller = {
     }
   },
 
-  show: async (req, res) => {
-    try {
-
-      const user = req.user
-
-      res.json({user})
-    } catch (error) {
-      errorHandler(res, error);
-    }
-  },
+  show: (req, res) => res.json({ user: req.user }),
 
   create: async (req, res) => {
-    const { name, email, password } = req.body;
+    const params = paramsBuilder(req.body, validParams);
+
     try {
-      const newUser = await User.create({ name, email, password });
+      const newUser = await User.create(params);
       res.status(200).json({ newUser });
     } catch (error) {
-      console.log(req.body);
       errorHandler(res, error);
     }
   },
 
   update: async (req, res) => {
     try {
+      const params = paramsBuilder(req.body, validParams); // <Object>
 
-      const paramsToUpdate = paramsBuilder(req.body,validParams) // <Object>
-
-      req.user = Object.assign(req.user, paramsToUpdate)
+      req.user = Object.assign(req.user, params);
 
       await req.user.save();
       await req.user.reload();
 
-      res.json({user: req.user})
-      // if (user) {
-      //   const updatedUser = await User.update(
-      //     { name, email },
-      //     { where: { id }, returning: true }
-      //   );
-
-      //   //Verificar que se generaron cambios
-      //   if (updatedUser.length > 1) {
-      //     res.json({ updatedUser: updatedUser[1][0] });
-      //   } else {
-      //     res.json({ updatedUser });
-      //   }
-      // } else {
-      //   res.json({ message: "user not found" });
-      // }
-
+      res.json({ user: req.user });
     } catch (error) {
       errorHandler(res, error);
     }

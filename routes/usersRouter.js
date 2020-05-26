@@ -1,21 +1,23 @@
-import {Router} from "express"
-import authCheck from "../middlewares/authCheck"
-import authUser from "../middlewares/authUser"
-import authAdmin from "../middlewares/authAdmin"
+import { Router } from "express";
 
-import controller  from "../controllers/usersController"
+import authMidd from "../middlewares/authMidd";
+import authRole from "../middlewares/authRole";
 
-const {find,index,show,create,update,destroy} = controller 
+import controller from "../controllers/usersController";
+
+const { find, index, show, create, update, destroy } = controller;
 
 let router = Router();
 
 router.route("/users")
-  .get(authCheck,authAdmin,index)
-  .post(create)
+  .get(authMidd, authRole, index)
+  .post(create);
 
-router.route("/users/:id")
-  .get(authCheck,authUser,find,show)
-  .put(authCheck,authUser,update)
-  .delete(authCheck,authUser,destroy)
+router
+  .route("/users/:id")
+  .all(find, authMidd, authRole )
+  .get(show)
+  .put(update)
+  .delete(destroy);
 
-export default router
+export default router;
