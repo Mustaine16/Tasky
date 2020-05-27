@@ -1,15 +1,25 @@
 import React, { useReducer } from "react";
 
-const initialState = {};
+
+const initialState = {
+  user: {},
+  token: {},
+};
 
 const UserContext = React.createContext(initialState);
 
 const userReducer = (state, action) => {
   switch (action.type) {
+    case "SET_TOKEN":
+      return {
+        ...state,
+        token: action.payload
+      };
     case "CREATE_USER":
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.user,
+        token:action.payload.token
       };
 
     case "EDIT_USER":
@@ -27,7 +37,8 @@ const userReducer = (state, action) => {
     case "LOGIN_USER":
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.user,
+        token:action.payload.token
       };
 
     default:
@@ -38,10 +49,17 @@ const userReducer = (state, action) => {
 const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialState);
 
-  function createUser({ newUser }) {
+  function setToken({ token }) {
+    dispatch({
+      type: "SET_TOKEN",
+      payload:token
+    })
+  }
+
+  function createUser({ user, token }) {
     dispatch({
       type: "CREATE_USER",
-      payload: newUser,
+      payload: { user, token }
     });
   }
 
@@ -59,10 +77,10 @@ const UserProvider = ({ children }) => {
     });
   }
 
-  function loginUser({ user }) {
+  function loginUser({ user,token }) {
     dispatch({
       type: "LOGIN_USER",
-      payload: user,
+      payload: { user, token }
     });
   }
 
@@ -71,13 +89,13 @@ const UserProvider = ({ children }) => {
       value={{
         state,
         actions: {
+          setToken,
           createUser,
           loginUser,
           editUser,
           getUser,
         },
-      }}
-    >
+      }}>
       {children}
     </UserContext.Provider>
   );

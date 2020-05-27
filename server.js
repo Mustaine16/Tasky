@@ -13,7 +13,11 @@ import sessionsRouter from "./routes/sessionsRouter";
 const app = express();
 
 //Middlewares
-
+app.use(function (req, res, next) {
+  req.headers["Content-Type"] = "application/json";
+  res.setHeader("Content-Type", "application/json");
+  next();
+});
 app.use(morgan("dev"));
 app.use(cors());
 app.use(methodOverride("_method"));

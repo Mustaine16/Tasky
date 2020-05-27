@@ -10,9 +10,8 @@ import FormInput from "../../components/Form/FormInput";
 import FormSubmitButton from "../../components/Form/FormSubmitButton";
 
 const Signup = () => {
-  const {
-    actions: { createUser }
-  } = useUserContext();
+
+  const { actions: { createUser } } = useUserContext();
   const [handleInputChange, handleSubmit] = useSubmitForm(createUser);
 
   const action = "http://localhost:3000/users";
@@ -20,7 +19,6 @@ const Signup = () => {
 
   return (
     <React.Fragment>
-      <Link to="/users/2/edit">EDIT</Link>
     <Form action={action} method={method} onSubmit={handleSubmit}>
       <FormInput name="name" onChange={handleInputChange} />
       <FormInput type="email" name="email" onChange={handleInputChange} />

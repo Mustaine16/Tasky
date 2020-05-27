@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import {Redirect} from "react-router-dom"
+import  { useState } from "react";
+import {useHistory} from "react-router-dom"
 
 const useSubmitForm = (contextAction) => {
   const [inputs, setInputs] = useState({});
+  const history =  useHistory()
 
   const handleInputChange = (e) => {
     setInputs({
@@ -22,25 +23,30 @@ const useSubmitForm = (contextAction) => {
       body: formData,
       headers: {
         "Content-Type": "application/json",
+        Authorization: "",
       },
     })
       .then((res) => {
         console.log(res.status);
+        console.log(res.headers.get('Content-Type'));
+        
         return res.json();
       })
       .then((result) => {
         if (result.errors) {
           console.log("ERROR");
+          console.log(result);
         } else {
           console.log("OK");
+          console.log(result);
           //Exec the dispatcher
+          console.log("result");
           contextAction(result);
-          return <Redirect to="/edit"/>
+          // history.push("/login")
         }
-        console.log(result);
       })
       .catch((err) => {
-        console.log("ERROR CLIENTE");
+        console.log("ERROR CLIENTE, en useSubmitForm");
         console.log(err);
       });
 

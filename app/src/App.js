@@ -16,7 +16,7 @@ function App() {
         <UserProvider>
           <Route exact path={"/login"} component={Login}></Route>
           <Route exact path={"/signup"} component={Signup}></Route>
-          <Route exact path={"/user/:id/edit"} component={Edit}></Route>
+          <Route exact path={"/user/edit"} component={Edit}></Route>
         </UserProvider>
       </Switch>
     </BrowserRouter>

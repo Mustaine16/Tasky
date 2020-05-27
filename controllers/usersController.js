@@ -48,14 +48,14 @@ const controller = {
 
   show: (req, res) => res.json({ user: req.user }),
 
-  create: async (req, res) => {
+  create: async (req, res,next) => {
     const params = paramsBuilder(req.body, validParams);
 
     try {
       const newUser = await User.create(params);
-      res.status(200).json({ newUser });
+      next();
     } catch (error) {
-      errorHandler(res, error);
+      return errorHandler(res, error);
     }
   },
 
