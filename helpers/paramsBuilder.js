@@ -3,7 +3,8 @@ export default function paramsBuilder(bodyParams, validParams) {
   //ValidParams --> Array of strings that indicates the valid params wich will be updated
 
   const parameters = {};
-
+  console.log(bodyParams);
+  
   validParams.forEach((param) => {
     if (bodyParams.hasOwnProperty(param)) {
       //To set null in categoryId

@@ -6,14 +6,38 @@ import { task as Task } from "../models";
 
 import paramsBuilder from "../helpers/paramsBuilder"
 
-const validParams = ["email","password"]
+const validParams = ["email", "password"]
 
 const controller = {
+
+  check: async function (req, res, next) {
+    console.log("COOKIE SESION DESDE EL FRONT: ", req.session.token);
+
+    if (!req.session.token) { console.log("No cookie was sent"); return res.status(401).json("No cookie was sent") };
+
+    const token = req.session.token || ''
+
+    try {
+
+      if (!token) return next();
+
+      const decrypt = await jwt.verify(token, secrets.jwtKey)
+      console.log(decrypt);
+      req.authUser = { id: decrypt.id }
+
+      return next();
+
+    } catch (err) {
+      return res.status(500).json(err.toString())
+    }
+  },
 
   login: async function (req, res, next) {
 
     //If the user user is already logged in
-    if (req.authUser || req.get("Authorization")) return res.json({ message: "You're already logged in" });
+    console.log("req.authuser:" + " " + req.authUser);
+
+    if (req.authUser) return res.json({ message: "You're already logged in" });
 
     try {
 
@@ -21,8 +45,8 @@ const controller = {
       const { email, password } = params
 
       if (!email || !password)
-        return res.status(401).json({message:"email and password are required"})
-      
+        return res.status(401).json({ message: "email and password are required" })
+
 
       const user = await User.findOne({
         where: { email },
@@ -42,13 +66,13 @@ const controller = {
           req.authUser = user;
           return next();
         } else {
-          return res.status(401).json({message:"Invalid password"})
+          return res.status(401).json({ message: "Invalid password" })
         }
-        
+
       } else {
-        
-        return res.status(401).json({message:"There isn't an account associated with this email"})
-        
+
+        return res.status(401).json({ message: "There isn't an account associated with this email" })
+
       }
     } catch (errors) {
       console.log(errors);
@@ -57,25 +81,35 @@ const controller = {
     }
   },
 
-  generateToken(req, res, next) {
+  generateToken: async function (req, res, next) {
     if (!req.authUser) return next();
 
-    req.token = jwt.sign({ id: req.authUser.id }, secrets.jwtKey, {
+    const token = await jwt.sign({ id: req.authUser.id }, secrets.jwtKey, {
       expiresIn: "24h",
     });
+
+    req.session.token = token;
 
     return next();
   },
 
-  sendToken(req, res) {
+  sendToken: async function (req, res) {
+    console.log("cookie: ", req.session.token);
+
     if (!req.authUser) return res.status(404).json({ message: "User not found" });
-    console.log(req.authUser)
+    // console.log(req.authUser)
+
     return res.json({
-      user:req.authUser,
-      token: req.token,
+      user: req.authUser || null,
+      token: req.session.token || null,//Ojo
     });
   },
-  
+
+  destroy: async (req, res, next) => {
+    req.session = null
+    return res.status(200).json({ message: "session destroyed" })
+  }
+
 };
 
 export default controller;

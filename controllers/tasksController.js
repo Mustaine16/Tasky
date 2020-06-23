@@ -53,6 +53,8 @@ const controller = {
     try {
       //Create with the user owner as param
       const params = paramsBuilder(req.body, validParams)
+      console.log(params);
+      
       params["userId"] = req.authUser.id
 
       const newTask = await Task.create(params);

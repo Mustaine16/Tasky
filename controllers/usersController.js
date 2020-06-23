@@ -1,5 +1,6 @@
 import { user as User } from "../models";
 import { task as Task } from "../models";
+import { category as Category } from "../models";
 
 import paramsBuilder from "../helpers/paramsBuilder";
 import errorHandler from "../helpers/errorHandler";
@@ -9,7 +10,11 @@ const validParams = ["name", "email", "password"];
 const controller = {
 
   find: async (req, res, next) => {
-    const id = Number(req.params.id);
+  
+    const id =  (req.authUser && req.authUser.id)|| Number(req.params.id);
+    console.log("ID: " , id);
+    
+    if(!id) return next();
 
     User.findByPk(id, {
       attributes: ["id", "name", "email"],
@@ -17,12 +22,14 @@ const controller = {
         {
           model: Task,
           as: "tasks",
+          include:[{ model: Category, as: "category", attributes: ["title"] }]
         },
       ],
     })
       .then((user) => {
         if (!user) return res.status(404).json({ message: "User not found" });
 
+        req.authUser = user
         req.user = user;
         req.mainObj = user;
         req.mainObj.userId = user.id;

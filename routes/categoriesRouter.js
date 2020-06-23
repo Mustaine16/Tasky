@@ -1,10 +1,9 @@
-import {Router} from "express"
+import { Router } from "express"
 
 import authMidd from "../middlewares/authMidd"
 import authRole from "../middlewares/authRole"
 
 import controller from "../controllers/categoriesController"
-
 
 const router = Router()
 
@@ -21,4 +20,4 @@ router.route("/categories/:id")
   .put(update)
   .delete(destroy)
 
-export default router
+export default router 

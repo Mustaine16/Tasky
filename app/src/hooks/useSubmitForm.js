@@ -1,9 +1,9 @@
-import  { useState } from "react";
-import {useHistory} from "react-router-dom"
+import { useState } from "react";
+import { useHistory } from "react-router-dom"
 
-const useSubmitForm = (contextAction) => {
+const useSubmitForm = (contextAction = "") => {
   const [inputs, setInputs] = useState({});
-  const history =  useHistory()
+  const history = useHistory()
 
   const handleInputChange = (e) => {
     setInputs({
@@ -23,26 +23,24 @@ const useSubmitForm = (contextAction) => {
       body: formData,
       headers: {
         "Content-Type": "application/json",
-        Authorization: "",
+        // "Authorization": `Bearer ${token}`,
       },
+      credentials: "include"
     })
       .then((res) => {
         console.log(res.status);
-        console.log(res.headers.get('Content-Type'));
-        
+        if (!res.ok) {
+          console.log("ERROR SERVER")
+        };
         return res.json();
       })
       .then((result) => {
         if (result.errors) {
-          console.log("ERROR");
-          console.log(result);
+          console.log("Errores:", result.errors);
         } else {
-          console.log("OK");
           console.log(result);
           //Exec the dispatcher
-          console.log("result");
-          contextAction(result);
-          // history.push("/login")
+          if (contextAction) contextAction(result);
         }
       })
       .catch((err) => {

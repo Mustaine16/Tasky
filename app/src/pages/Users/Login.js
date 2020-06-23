@@ -8,14 +8,14 @@ import Form from "../../components/Form/Form";
 import FormInput from "../../components/Form/FormInput";
 import FormSubmitButton from "../../components/Form/FormSubmitButton";
 
-const Edit = () => {
+const Login = () => {
   const {
     actions: { loginUser },
   } = useUserContext();
 
   const [handleInputChange, handleSubmit] = useSubmitForm(loginUser);
 
-  const action = "http://localhost:3000/sessions";
+  const action = "http://localhost:3000/sessions/new";
   const method = "POST";
 
   return (
@@ -27,4 +27,4 @@ const Edit = () => {
   );
 };
 
-export default Edit;
+export default Login;

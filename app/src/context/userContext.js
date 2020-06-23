@@ -1,44 +1,36 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 
 
 const initialState = {
   user: {},
   token: {},
+  loading: true
 };
 
 const UserContext = React.createContext(initialState);
 
 const userReducer = (state, action) => {
   switch (action.type) {
-    case "SET_TOKEN":
-      return {
-        ...state,
-        token: action.payload
-      };
-    case "CREATE_USER":
-      return {
-        ...state,
-        user: action.payload.user,
-        token:action.payload.token
-      };
 
-    case "EDIT_USER":
+    case "INIT_LOGIN":
       return {
         ...state,
-        user: action.payload,
-      };
-
-    case "GET_USER":
-      return {
-        ...state,
-        user: action.payload,
+        loading: true
       };
 
     case "LOGIN_USER":
       return {
         ...state,
-        user: action.payload.user,
-        token:action.payload.token
+        user: action.payload.user || null,
+        token: action.payload.token || null,
+        loading: false
+      };
+
+    case "LOGOUT_USER":
+      return {
+        ...state,
+        user: null,
+        token: null
       };
 
     default:
@@ -49,17 +41,44 @@ const userReducer = (state, action) => {
 const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialState);
 
-  function setToken({ token }) {
-    dispatch({
-      type: "SET_TOKEN",
-      payload:token
-    })
+  //Check if the user is logged in, sending the cookies
+  useEffect(() => {
+
+    console.log("Checking if user is logged in, sending cookies");
+
+    initLogin(); //Fires the loading
+
+    fetch("http://localhost:3000/sessions/check",
+      {
+        method: "POST",
+        credentials: "include" //This will send the cookies
+      }
+    )
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        const { token, user } = res
+        loginUser({ token, user })
+      })
+      .catch(err => console.log(err))
+  }, [])
+
+
+  function initLogin() {
+    dispatch({ type: "INIT_LOGIN" })
   }
 
-  function createUser({ user, token }) {
+  function loginUser({ user, token }) {
     dispatch({
-      type: "CREATE_USER",
+      type: "LOGIN_USER",
       payload: { user, token }
+    });
+  }
+
+  function logoutUser() {
+    dispatch({
+      type: "LOGOUT_USER",
+      payload: null
     });
   }
 
@@ -70,33 +89,17 @@ const UserProvider = ({ children }) => {
     });
   }
 
-  function getUser({ user }) {
-    dispatch({
-      type: "GET_USER",
-      payload: user,
-    });
-  }
-
-  function loginUser({ user,token }) {
-    dispatch({
-      type: "LOGIN_USER",
-      payload: { user, token }
-    });
-  }
-
   return (
     <UserContext.Provider
       value={{
         state,
         actions: {
-          setToken,
-          createUser,
           loginUser,
-          editUser,
-          getUser,
-        },
+          logoutUser,
+          editUser
+        }
       }}>
-      {children}
+      {state.loading ? "Loading" : children}
     </UserContext.Provider>
   );
 };

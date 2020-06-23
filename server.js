@@ -1,8 +1,8 @@
 import express, { json } from "express";
 import cors from "cors";
 import methodOverride from "method-override";
-// import session from "express-session";
-import morgan from "morgan";
+import cookieSession from "cookie-session";
+import morgan from "morgan"
 
 //Routes
 import usersRouter from "./routes/usersRouter";
@@ -13,26 +13,28 @@ import sessionsRouter from "./routes/sessionsRouter";
 const app = express();
 
 //Middlewares
-app.use(function (req, res, next) {
-  req.headers["Content-Type"] = "application/json";
-  res.setHeader("Content-Type", "application/json");
-  next();
-});
+// app.use(function (req, res, next) {
+//   req.headers["Content-Type"] = "application/json";
+//   res.setHeader("Content-Type", "application/json");
+//   next();
+// });
 app.use(morgan("dev"));
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://localhost:4000'
+  ],
+  credentials: true
+}));
+//Cookies [name will be 'jwtCookie']
+app.use(cookieSession({
+  name: 'session',
+  keys: ["b6734jv0987s12sc", "21n4lkn0bu0sdfklj"],
+  httpOnly: true,
+  maxAge: 24 * 60 * 60 * 1000
+}))
 app.use(methodOverride("_method"));
 app.use(json());
 
-/* app.use(
-  session({
-    secret: ["jh4jg14h23nba8czxcl", "18bs986amb42b4kj54"],
-    saveUnitialized: false,
-    resave: false,
-  })
-); */
-
-/* //Session middleware
-app.use(usersSession); */
 
 //Routes
 app.use(sessionsRouter);
@@ -43,7 +45,15 @@ app.use(categoriesRouter);
 //Error Handler
 
 app.use((err, req, res, next) => {
-  res.status(500).json({
+
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).json({ status: 401, message: 'invalid token or token not found' });
+  }
+
+  console.log(err)
+
+  return res.status(500).json({
+    err,
     status: err.status,
     message: err.message,
   });

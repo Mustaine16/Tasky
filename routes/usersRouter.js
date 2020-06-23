@@ -9,7 +9,7 @@ import sessionController from "../controllers/sessionsController"
 const { find, index, show, create, update, destroy } = controller;
 const { login, generateToken, sendToken} = sessionController;
 
-let router = Router();
+const router = Router();
 
 router.route("/users")
   .get(authMidd, authRole, index)
