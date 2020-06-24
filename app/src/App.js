@@ -4,12 +4,13 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 //Context
 import { UserProvider } from "./context/userContext";
 
+import PrivateRoute from "./utils/PrivateRoute"
+
 //Components
 import Login from "./pages/Users/Login";
 import Logout from "./pages/Users/Logout";
 import Signup from "./pages/Users/Signup";
 import Edit from "./pages/Users/Edit";
-
 import CreateTask from "./pages/Tasks/CreateTask"
 import TasksList from "./pages/Tasks/TasksList"
 
@@ -20,7 +21,7 @@ function App() {
       <Switch>
         <UserProvider>
           {/* Tasks */}
-          <Route exact path={"/tasks"} component={TasksList}></Route>
+          <PrivateRoute exact path={"/"} component={TasksList}></PrivateRoute>
           <Route exact path={"/tasks/new"} component={CreateTask}></Route>
           <Route exact path={"/signup"} component={Signup}></Route>
           <Route exact path={"/login"} component={Login}></Route>

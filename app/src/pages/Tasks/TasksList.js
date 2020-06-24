@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useUserContext } from "../../context/userContext"
 
-const TasksList =  () => {
+const TasksList = () => {
 
   const { state: { user: { tasks } } } = useUserContext();
 
