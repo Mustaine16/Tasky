@@ -14,8 +14,8 @@ const TasksList = () => {
     <ul>
       {!tasks.length
         ? "Yo don't have any task, create one!"
-        : tasks.map(task => {
-          
+        : tasks.map(({ id, title, description, category }) => {
+          return <Task key={ title + id } title={title} description={description} category={category} />
         })}
 
     </ul>
