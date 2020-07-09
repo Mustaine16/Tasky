@@ -1,17 +1,22 @@
 import React from "react";
 
-function Input({ name, type = "text", options = [], onChange }) {
+function Input({ name, label, type = "text", options = [], onChange }) {
 
   if (type === "select") {
+    console.log("OPTIONS: ", options[0]["id"]);
+    
     return (
       <div className="form-control">
-        <label htmlFor={name}>{name}</label>
+        <label htmlFor={name}>{label || name}</label>
         <select
           name={name}
           id={name}
           onChange={onChange}
         >
-          {options.map(opt => <option value={opt["id"]} key={opt["name"]}>{opt["name"]}</option> )}
+          <option value={""}>Select a Category</option>
+          {options.map(opt =>
+            <option value={opt["id"]} key={opt["title"]}>{opt["title"]}</option>
+          )}
         </select>
       </div>
     )

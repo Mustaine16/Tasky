@@ -10,9 +10,8 @@ const router = Router()
 const {find,index,show,create,update,destroy} = controller
 
 router.route("/categories")
-  .all(authMidd, authRole)  
   .get(index)
-  .post(create)
+  .post(authMidd, authRole, create)
 
 router.route("/categories/:id")
   .all(authMidd, authRole, find) 

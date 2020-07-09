@@ -1,19 +1,22 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom"
 
-const useSubmitForm = (contextAction = "") => {
-  const [inputs, setInputs] = useState({});
+const useSubmitForm = (contextAction = "", redirect = "", initialState = {}) => {
+  const [inputs, setInputs] = useState(initialState);
   const history = useHistory()
 
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     setInputs({
       ...inputs,
       [e.currentTarget.name]: e.currentTarget.value,
-    });
+    })
+
     e.preventDefault();
   };
 
   const handleSubmit = (e) => {
+    console.log("SUBMIT!");
+
     const URL = e.currentTarget.action;
     const METHOD = e.currentTarget.method;
     const formData = JSON.stringify(inputs);
@@ -35,12 +38,13 @@ const useSubmitForm = (contextAction = "") => {
         return res.json();
       })
       .then((result) => {
-        if (result.errors) {
-          console.log("Errores:", result.errors);
+        if (result.errors || result.message) {
+          console.log("Errores:", result.errors || result.message);
         } else {
           console.log(result);
           //Exec the dispatcher
           if (contextAction) contextAction(result);
+          if (redirect) history.push(redirect)
         }
       })
       .catch((err) => {
@@ -51,7 +55,7 @@ const useSubmitForm = (contextAction = "") => {
     e.preventDefault();
   };
 
-  return [handleInputChange, handleSubmit];
+  return { inputs, setInputs, handleInputChange, handleSubmit };
 };
 
 export default useSubmitForm;

@@ -1,11 +1,10 @@
 import { task as Task } from "../models";
-import { user as User } from "../models";
-import { category as Category } from "../models";
+import { dashboard as Dashboard } from "../models";
 
 import paramsBuilder from "../helpers/paramsBuilder";
 import errorHandler from "../helpers/errorHandler";
 
-const validParams = ["title", "description", "categoryId"];
+const validParams = ["title", "description", "progress"];
 
 const controller = {
   
@@ -16,15 +15,15 @@ const controller = {
 
       const task = await Task.findByPk(id, {
         include: [
-          { model: User, as: "user", attributes: ["id", "name", "email"] },
-          { model: Category, as: "category", attributes: ["id", "title"] },
+          { model: Dashboard, as: "dashboard", attributes: ["id", "name"] },
         ],
       });
 
       if (!task) return next(new Error("Task not found"));
 
       req.task = task;
-      req.mainObj = task;
+      //mainObj will be the default property to check in authMidd
+      req.mainObj = task; 
 
       return next();
     } catch (error) {
@@ -50,12 +49,13 @@ const controller = {
   },
 
   create: async (req, res) => {
+    
     try {
       //Create with the user owner as param
       const params = paramsBuilder(req.body, validParams)
       console.log(params);
       
-      params["userId"] = req.authUser.id
+      params["dashboardId"] = req.dashboard.id
 
       const newTask = await Task.create(params);
 

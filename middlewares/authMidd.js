@@ -2,10 +2,10 @@
 import secrets from "../config/secrets";
 import jwt from "jsonwebtoken"
 
-//Check if a token was sent and set req.authUser with the user's data
 
 const authMiddleware = async (req, res, next) => {
-
+  
+  //Check if a token was sent and set req.authUser with the user's data
   const token = req.session.token || ''
 
   try {
@@ -13,7 +13,7 @@ const authMiddleware = async (req, res, next) => {
     if (!token) return res.status(401).json({ message: "Error, token not found" })
     
     const decrypt = await jwt.verify(token, secrets.jwtKey)
-    console.log(decrypt);
+    
     req.authUser = { id: decrypt.id }
 
     return next();

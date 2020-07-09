@@ -5,24 +5,26 @@ import { useUserContext } from "../../context/userContext";
 import useSubmitForm from "../../hooks/useSubmitForm";
 
 import Form from "../../components/Form/Form";
-import FormInput from "../../components/Form/FormInput";
-import FormSubmitButton from "../../components/Form/FormSubmitButton";
+import Input from "../../components/Form/Input";
+import Submit from "../../components/Form/Submit";
 
 const Login = () => {
   const {
     actions: { loginUser },
   } = useUserContext();
 
-  const [handleInputChange, handleSubmit] = useSubmitForm(loginUser);
+  const redirect = "/"
+
+  const { handleInputChange, handleSubmit } = useSubmitForm(loginUser, redirect);
 
   const action = "http://localhost:3000/sessions/new";
   const method = "POST";
 
   return (
     <Form action={action} method={method} onSubmit={handleSubmit}>
-      <FormInput name="email" type="text" onChange={handleInputChange}/>
-      <FormInput name="password" type="password" onChange={handleInputChange}/>
-      <FormSubmitButton value="Log in"/>
+      <Input name="email" type="text" onChange={handleInputChange} />
+      <Input name="password" type="password" onChange={handleInputChange} />
+      <Submit value="Log in" />
     </Form>
   );
 };

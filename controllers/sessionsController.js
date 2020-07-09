@@ -2,7 +2,8 @@ import jwt from "jsonwebtoken";
 import secrets from "../config/secrets";
 
 import { user as User } from "../models";
-import { task as Task } from "../models";
+import { dashboard as Dashboard } from "../models";
+import { category as Category } from "../models";
 
 import paramsBuilder from "../helpers/paramsBuilder"
 
@@ -53,8 +54,9 @@ const controller = {
         attributes: ["id", "name", "email"],
         include: [
           {
-            model: Task,
-            as: "tasks",
+            model: Dashboard,
+            as: "dashboards",
+            include: [{ model: Category, as: "category", attributes: ["title"] }]
           },
         ],
       });
@@ -105,7 +107,7 @@ const controller = {
     });
   },
 
-  destroy: async (req, res, next) => {
+  destroy: async (req, res) => {
     req.session = null
     return res.status(200).json({ message: "session destroyed" })
   }

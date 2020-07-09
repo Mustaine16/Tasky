@@ -33,6 +33,20 @@ const userReducer = (state, action) => {
         token: null
       };
 
+    case "INIT_TASK":
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case "ADD_TASK":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          
+        }
+      }
     default:
       return state;
   }
@@ -89,6 +103,13 @@ const UserProvider = ({ children }) => {
     });
   }
 
+  function addTask({ newTask }) {
+    dispatch({
+      type: "ADD_TASK",
+      payload: newTask
+    })
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -96,7 +117,8 @@ const UserProvider = ({ children }) => {
         actions: {
           loginUser,
           logoutUser,
-          editUser
+          editUser,
+          addTask
         }
       }}>
       {state.loading ? "Loading" : children}

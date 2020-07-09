@@ -6,18 +6,17 @@ import Task from "./Task"
 
 const TasksList = () => {
 
-  const { state: { user: { tasks } } } = useUserContext();
+  const { state: { user: { dashboards } } } = useUserContext();
 
-  console.log("Tasks: ", tasks);
+  console.log("dashboards: ", dashboards);
 
   return (
     <ul>
-      {!tasks.length
+      {!dashboards.length
         ? "Yo don't have any task, create one!"
-        : tasks.map(task => {
-          
+        : dashboards.map(task => {
+          "hola"
         })}
-
     </ul>
   )
 }

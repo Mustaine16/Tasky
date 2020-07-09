@@ -1,5 +1,5 @@
 import { user as User } from "../models";
-import { task as Task } from "../models";
+import { dashboard as Dashboard } from "../models";
 import { category as Category } from "../models";
 
 import paramsBuilder from "../helpers/paramsBuilder";
@@ -10,38 +10,44 @@ const validParams = ["name", "email", "password"];
 const controller = {
 
   find: async (req, res, next) => {
-  
-    const id =  (req.authUser && req.authUser.id)|| Number(req.params.id);
-    console.log("ID: " , id);
-    
-    if(!id) return next();
 
-    User.findByPk(id, {
-      attributes: ["id", "name", "email"],
-      include: [
-        {
-          model: Task,
-          as: "tasks",
-          include:[{ model: Category, as: "category", attributes: ["title"] }]
-        },
-      ],
-    })
-      .then((user) => {
-        if (!user) return res.status(404).json({ message: "User not found" });
+    const id = (req.authUser && req.authUser.id) || Number(req.params.id);
+    console.log("ID: ", id);
 
-        req.authUser = user
-        req.user = user;
-        req.mainObj = user;
-        req.mainObj.userId = user.id;
+    if (!id) return next();
 
-        return next();
+    try {
+
+      const user = await User.findByPk(id, {
+        attributes: ["id", "name", "email"],
+        include: [
+          {
+            model: Dashboard,
+            as: "dashboards",
+            include: [{ model: Category, as: "category", attributes: ["title"] }]
+          },
+        ],
       })
-      .catch((err) => next(err));
+
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      req.authUser = user
+      req.user = user;
+      req.mainObj = user;
+      req.mainObj.userId = user.id;
+
+      return next();
+      
+    } catch (error) {
+      return next(err)
+    }
+
+
   },
 
   index: async (req, res) => {
     try {
-      const users = await User.findAll({attributes:["id","name","email","role"]});
+      const users = await User.findAll({ attributes: ["id", "name", "email", "role"] });
 
       if (users) {
         res.json({ users });
@@ -55,7 +61,7 @@ const controller = {
 
   show: (req, res) => res.json({ user: req.user }),
 
-  create: async (req, res,next) => {
+  create: async (req, res, next) => {
     const params = paramsBuilder(req.body, validParams);
 
     try {

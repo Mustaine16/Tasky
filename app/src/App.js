@@ -8,6 +8,9 @@ import PrivateRoute from "./utils/PrivateRoute"
 
 //Components
 import Layout from "./components/Layout/Layout";
+import Dashboard from "./components/Dashboards/Dashboard";
+import DashboardContainer from "./components/Dashboards/DashboardContainer";
+import DashboardLink from "./components/Dashboards/DashboardLink";
 import Home from "./pages/Home"
 import Login from "./pages/Users/Login";
 import Logout from "./pages/Users/Logout";
@@ -30,6 +33,9 @@ function App() {
             <Route exact path={"/logout"} component={Logout}></Route>
             {/* User */}
             <Route exact path={"/user/edit"} component={Edit}></Route>
+            {/* Dashboard */}
+            <Route exact path={"/dashboard"} component={DashboardLink}></Route>
+            <Route exact path={"/dashboard/:id"} component={DashboardContainer}></Route>
             {/* Tasks */}
             <Route exact path={"/tasks/new"} component={CreateTask}></Route>
             

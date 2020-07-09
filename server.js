@@ -6,6 +6,7 @@ import morgan from "morgan"
 
 //Routes
 import usersRouter from "./routes/usersRouter";
+import dashboardsRouter from "./routes/dashboardsRouter";
 import tasksRouter from "./routes/tasksRouter";
 import categoriesRouter from "./routes/categoriesRouter";
 import sessionsRouter from "./routes/sessionsRouter";
@@ -39,6 +40,7 @@ app.use(json());
 //Routes
 app.use(sessionsRouter);
 app.use(usersRouter);
+app.use(dashboardsRouter);
 app.use(tasksRouter);
 app.use(categoriesRouter);
 

@@ -1,22 +1,44 @@
 import React from 'react';
-
-import { useUserContext } from "../../context/userContext"
+import { Link } from "react-router-dom"
 
 import Task from "./Task"
+import { useEffect } from 'react';
+import { useState } from 'react';
 
-const TasksList = () => {
+const TasksList = ({ tasks, progress }) => {
 
-  const { state: { user: { tasks } } } = useUserContext();
+  const [filteredTasks, setFilteredTasks] = useState([])
 
-  console.log("Tasks: ", tasks);
+  const filterTasks = () => setFilteredTasks(tasks.filter(task => task.progress === progress))
+
+  useEffect(() => {
+    filterTasks();
+  }, [])
+
+  useEffect(() => {
+    console.log("re-render");
+  }, [filteredTasks])
 
   return (
     <ul>
-      {!tasks.length
-        ? "Yo don't have any task, create one!"
-        : tasks.map(({ id, title, description, category }) => {
-          return <Task key={ title + id } title={title} description={description} category={category} />
-        })}
+      {!filteredTasks.length
+        ? <li>
+          You dont have any task,
+            <Link to="/tasks/new">create One!</Link>
+        </li>
+        : filteredTasks.map(
+          ({ id, name, description, category }) => {
+            return (
+              <Task
+                key={name + id}
+                name={name}
+                description={description}
+                category={category}
+              >
+              </Task>
+            )
+          })
+      }
 
     </ul>
   )

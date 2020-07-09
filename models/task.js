@@ -18,21 +18,38 @@ export default (sequelize, DataTypes) => {
           notNull: { args: true, msg: "description cannot be null" },
         },
       },
-      categoryId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        validate: {
-          notEmpty: { args: true, msg: "Category cannot be empty" }
-        },
+
+      progress:{
+        type: DataTypes.ENUM,
+        allowNull:false,
+        values: ["todo", "working", "done"],
+        defaultValue: "todo"
       },
-      userId: {
+
+      dashboardId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-          notEmpty: { args: true, msg: "userId cannot be empty" },
-          notNull: { args: true, msg: "userId cannot be null" },
-        },
-      },
+          notEmpty: { args: true, msg: "dashboardId cannot be empty" },
+          notNull: { args: true, msg: "dashboardId cannot be null" },
+        }
+      }
+
+      // categoryId: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: true,
+      //   validate: {
+      //     notEmpty: { args: true, msg: "Category cannot be empty" }
+      //   },
+      // },
+      // userId: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: false,
+      //   validate: {
+      //     notEmpty: { args: true, msg: "userId cannot be empty" },
+      //     notNull: { args: true, msg: "userId cannot be null" },
+      //   },
+      //},
     },
     {
       tableName: "tasks",
@@ -40,18 +57,26 @@ export default (sequelize, DataTypes) => {
   );
   Task.associate = function (models) {
 
-    Task.belongsTo(models.user, {
-      as: "user",
-      foreignKey: "userId",
-      onDelete: "CASCADE"
-    });
-
-    Task.belongsTo(models.category, {
-      as: "category",
-      foreignKey: "categoryId",
+    Task.belongsTo(models.dashboard, {
+      as: "dashboard",
+      foreignKey: "dashboardId",
       onUpdate: "CASCADE",
-      onDelete: "SET NULL"
-    });
+      onDelete: "CASCADE"
+    })
+
+    // Task.belongsTo(models.user, {
+    //   as: "user",
+    //   foreignKey: "userId",
+    //   onUpdate: "CASCADE",
+    //   onDelete: "CASCADE"
+    // });
+
+    // Task.belongsTo(models.category, {
+    //   as: "category",
+    //   foreignKey: "categoryId",
+    //   onUpdate: "CASCADE",
+    //   onDelete: "SET NULL"
+    // });
   };
   return Task;
 };

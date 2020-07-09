@@ -1,10 +1,10 @@
 import React from 'react';
 
-import TasksList from "../components/Tasks/TasksList"
+import DashboardsList from "../components/Dashboards/DashboardsList"
 
 const Home = () => {
 
-  return <TasksList/>
+  return <DashboardsList/>
 
 }
 

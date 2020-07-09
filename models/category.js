@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Category.associate = function (models) {
-    Category.hasMany(models.task, {as:"tasks"})
+    Category.hasMany(models.dashboard, {as:"dashboards"})
   };
   return Category;
 };

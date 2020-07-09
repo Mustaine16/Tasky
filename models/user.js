@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "user",
     {
+      
       name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -15,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
           notNull: { args: true, msg: "name cannot be null" },
         },
       },
+
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -27,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
           notNull: { args: true, msg: "email cannot be null" },
         },
       },
+
       password: {
         type: DataTypes.VIRTUAL,
         allowNull: false,
@@ -38,8 +41,10 @@ module.exports = (sequelize, DataTypes) => {
           notNull: { args: true, msg: "password cannot be null" },
         },
       },
+
       password_hash: DataTypes.STRING,
-      role: {
+
+      roles: {
         type: DataTypes.ENUM,
         values: ['user', 'admin'],
         defaultValue: "user"
@@ -51,8 +56,8 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = function (models) {
-    User.hasMany(models.task, {
-      as: "tasks",
+    User.hasMany(models.dashboard, {
+      as: "dashboards",
     });
   };
 
@@ -105,7 +110,7 @@ module.exports = (sequelize, DataTypes) => {
       User.findOne({})
         .then((users) => {
           if (!users) {
-            user.role = "admin";
+            user.roles = "admin";
             user.save();
           }
         })
