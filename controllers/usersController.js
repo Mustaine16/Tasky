@@ -65,7 +65,7 @@ const controller = {
     const params = paramsBuilder(req.body, validParams);
 
     try {
-      const newUser = await User.create(params);
+      await User.create(params);
       next();
     } catch (error) {
       return errorHandler(res, error);

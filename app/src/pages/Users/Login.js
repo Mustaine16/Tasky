@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom"
 
 //Context and Hook
 import { useUserContext } from "../../context/userContext";
@@ -21,11 +22,14 @@ const Login = () => {
   const method = "POST";
 
   return (
-    <Form action={action} method={method} onSubmit={handleSubmit}>
-      <Input name="email" type="text" onChange={handleInputChange} />
-      <Input name="password" type="password" onChange={handleInputChange} />
-      <Submit value="Log in" />
-    </Form>
+    <div className="form__container">
+      <Form action={action} method={method} onSubmit={handleSubmit}>
+        <Input name="email" type="text" onChange={handleInputChange} />
+        <Input name="password" type="password" onChange={handleInputChange} />
+        <Submit value="Log in" />
+      </Form>
+      <Link to="/signup">Create account</Link>
+    </div>
   );
 };
 

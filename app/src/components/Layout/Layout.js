@@ -5,6 +5,8 @@ import { useUserContext } from "../../context/userContext"
 
 import Logout from "../Logout"
 
+import "./Layout.css"
+
 const Layout = ({ children }) => {
 
   const { state: { user } } = useUserContext();

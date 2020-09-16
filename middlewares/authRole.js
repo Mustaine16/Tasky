@@ -1,6 +1,7 @@
 import { user as User } from "../models";
 
 export default async function (req, res, next) {
+  
   try {
     const { id } = req.authUser;
 
@@ -19,6 +20,7 @@ export default async function (req, res, next) {
     if (req.mainObj && req.mainObj.userId == req.authUser.id) return next();
 
     return res.status(401).json({ error: "Authorization Failed" });
+
   } catch (error) {
     next(error);
   }
