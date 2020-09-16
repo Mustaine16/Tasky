@@ -1,14 +1,12 @@
 import React from "react"
+import styled from "styled-components"
 import { useHistory } from "react-router-dom"
 
 import { useUserContext } from "../context/userContext"
 
 const Logout = () => {
-
   const { actions: { logoutUser } } = useUserContext();
-
   const history = useHistory()
-
   const handleLogout = () => {
     fetch(
       "http://localhost:3000/sessions?_method=DELETE",
@@ -26,7 +24,14 @@ const Logout = () => {
       .catch(err => console.log(err))
   }
 
-  return <button onClick={handleLogout}>Logout</button>
+  const Button = styled.button`
+    background: #FB6962;
+    padding:.5rem;
+    border-radius:5px;
+    border:none;
+  `;
+
+  return <Button onClick={handleLogout}>Logout</Button>
 
 }
 

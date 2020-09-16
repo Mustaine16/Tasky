@@ -1,33 +1,36 @@
 import React from 'react';
 import { Link } from "react-router-dom"
+import styled from "styled-components";
 
 import { useUserContext } from "../../context/userContext"
-
+import CreateDashboardButton from "../Dashboard/CreateDashboardButton"
 import Logout from "../Logout"
 
-import "./Layout.css"
+const Navbar = styled.nav`
+  display: flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  background: #5491ee;
+`;
+
+const NavLink = styled(Link)`
+  color: whitesmoke;
+  text-decoration:none;
+`;
+
 
 const Layout = ({ children }) => {
-
   const { state: { user } } = useUserContext();
-
+  
   return (
     <>
       <main>
-        <nav>
-          <ul>
-            {(user && user.name)
-              ?
-              (<>
-                <h1>Hi {user.name}!</h1>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/tasks/new">Create</Link></li>
-                <Logout/>
-              </>)
-              : ""
-            }
-          </ul>
-        </nav>
+        <Navbar>
+          <NavLink to="/">Home</NavLink>
+          <CreateDashboardButton/>
+          {user && <Logout />}
+        </Navbar>
         {children}
       </main>
     </>

@@ -39,12 +39,16 @@ const userReducer = (state, action) => {
         loading: true,
       };
 
-    case "ADD_TASK":
+    case "ADD_DASHBOARD":
       return {
         ...state,
         user: {
           ...state.user,
-          
+          dashboards: {
+            ...state.user.dashboards,
+            ...action.payload.newDashboard
+          }
+
         }
       }
     default:
@@ -103,10 +107,10 @@ const UserProvider = ({ children }) => {
     });
   }
 
-  function addTask({ newTask }) {
+  function addDashboard({ newDashboard }) {
     dispatch({
-      type: "ADD_TASK",
-      payload: newTask
+      type: "ADD_DASHBOARD",
+      payload: newDashboard
     })
   }
 
@@ -118,7 +122,7 @@ const UserProvider = ({ children }) => {
           loginUser,
           logoutUser,
           editUser,
-          addTask
+          addDashboard
         }
       }}>
       {state.loading ? "Loading" : children}

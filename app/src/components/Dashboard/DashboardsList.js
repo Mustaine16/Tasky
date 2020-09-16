@@ -1,9 +1,22 @@
 import React from 'react';
+import styled from "styled-components"
 import { Link } from "react-router-dom"
 
 import { useUserContext } from "../../context/userContext"
 
 import DashboardLink from "./DashboardLink"
+
+const Styled = {
+  DashboardList: styled.ul`
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    padding:.5rem;
+    @media screen and (min-width:1024px){
+      flex-direction: row
+    }
+    `
+};
 
 const DashboardsList = () => {
 
@@ -12,7 +25,7 @@ const DashboardsList = () => {
   console.log("dashboards: ", dashboards);
 
   return (
-    <ul>
+    <Styled.DashboardList>
       {!dashboards.length
         ? <li>
           You dont have any task,
@@ -32,7 +45,7 @@ const DashboardsList = () => {
             )
           })}
 
-    </ul>
+    </Styled.DashboardList>
   )
 }
 
