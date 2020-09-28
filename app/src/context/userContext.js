@@ -4,6 +4,8 @@ import React, { useReducer, useEffect } from "react";
 const initialState = {
   user: {},
   token: {},
+  dashboards: {},
+  selectedDashboard: null,
   loading: true
 };
 
@@ -65,18 +67,20 @@ const UserProvider = ({ children }) => {
     console.log("Checking if user is logged in, sending cookies");
 
     initLogin(); //Fires the loading
-
+    
+    
     fetch("http://localhost:3000/sessions/check",
-      {
-        method: "POST",
-        credentials: "include" //This will send the cookies
-      }
+    {
+      method: "POST",
+      credentials: "include" //This will send the cookies
+    }
     )
-      .then(res => res.json())
-      .then(res => {
-        console.log(res);
+    .then(res => res.json())
+    .then(res => {
+      console.log(res);
         const { token, user } = res
         loginUser({ token, user })
+        
       })
       .catch(err => console.log(err))
   }, [])
@@ -125,7 +129,7 @@ const UserProvider = ({ children }) => {
           addDashboard
         }
       }}>
-      {state.loading ? "Loading" : children}
+      {state.loading ? "Loading FROM CONTEXT" : children}
     </UserContext.Provider>
   );
 };

@@ -1,11 +1,22 @@
 import React from 'react';
-import { Link } from "react-router-dom"
+import styled from "styled-components"
 
 import Task from "./Task"
 import { useEffect } from 'react';
 import { useState } from 'react';
 
-const TasksList = ({ tasks, progress }) => {
+const Container = styled.article`
+    width: 200px;
+    align-self: flex-start;
+    padding:10px 7px;
+    background: var(--taskList);
+    border: 3px solid black;
+    scroll-snap-align: center;
+`
+const List = styled.ul`
+`
+
+const TasksList = ({ tasks, progress, title }) => {
 
   const [filteredTasks, setFilteredTasks] = useState([])
 
@@ -20,27 +31,27 @@ const TasksList = ({ tasks, progress }) => {
   }, [filteredTasks])
 
   return (
-    <ul>
-      {!filteredTasks.length
-        ? <li>
-          You dont have any task,
-            <Link to="/tasks/new">create One!</Link>
-        </li>
-        : filteredTasks.map(
-          ({ id, name, description, category }) => {
+    <Container>
+      <h3>{title}</h3>
+      <List>
+        {filteredTasks.map(
+          ({ id, title, description, category }) => {
             return (
               <Task
-                key={name + id}
-                name={name}
+                key={title + id}
+                title={title}
                 description={description}
                 category={category}
               >
               </Task>
             )
           })
-      }
+        }
 
-    </ul>
+        Add
+
+      </List>
+    </Container>
   )
 }
 

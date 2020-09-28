@@ -1,12 +1,16 @@
 *{
   margin: 0;
   padding: 0;
+  list-style: none;
+  box-sizing: content-box;
 }
 
 :root{
-  --bodyBackground: #5d8bfe;
-  --navbarBackground: #9550f5;
+  /* --bodyBackground: #5d8bfe; */
+  --navbarBackground: #5491ee;
   --miniDashboard: #faf7f7;
+  --taskList: #ebecf0;
+  --task: #fff;
 }
 
 body {

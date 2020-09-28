@@ -10,8 +10,9 @@ const Navbar = styled.nav`
   display: flex;
   align-items:center;
   justify-content:space-between;
+  height:50px;
   width:100%;
-  background: #5491ee;
+  background: var(--navbarBackground);
 `;
 
 const NavLink = styled(Link)`
@@ -19,20 +20,26 @@ const NavLink = styled(Link)`
   text-decoration:none;
 `;
 
+const Main = styled.main`
+  display:flex;
+  min-height: calc(100vh - 50px)
+  /* flex-direction:column; */
+`;
+
 
 const Layout = ({ children }) => {
   const { state: { user } } = useUserContext();
-  
+
   return (
     <>
-      <main>
-        <Navbar>
-          <NavLink to="/">Home</NavLink>
-          <CreateDashboardButton/>
-          {user && <Logout />}
-        </Navbar>
+      <Navbar>
+        <NavLink to="/">Home</NavLink>
+        <CreateDashboardButton />
+        {user && <Logout />}
+      </Navbar>
+      <Main>
         {children}
-      </main>
+      </Main>
     </>
   )
 }

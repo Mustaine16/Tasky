@@ -3,13 +3,13 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 
 const MiniDashboard = styled.li`
-    background: var(--miniDashboard);
     display: flex;
     flex-flow: column nowrap;
     margin:.4rem 0;
     min-width: 150px;
-    /* min-height: 200px; */
-    /* padding: .5rem; */
+    padding: 0 0 .5em .3em;
+    background: var(--miniDashboard);
+    border-top:.5em solid var(--navbarBackground);
     border-radius: 5px;
 
 `

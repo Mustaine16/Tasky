@@ -3,14 +3,17 @@ import { Route, Redirect } from 'react-router-dom'
 
 import { useUserContext } from "../context/userContext"
 
-// import useIsAuth from "../hooks/useIsAuth"
 
 const PrivateRoute = ({ component, ...props }) => {
 
-  const { state: { user } } = useUserContext();
+  const { state } = useUserContext();
+  const { user } = state
   const isAuth = !!(user && user.id)
 
-  return <Route {...props} component={ isAuth ? component : ()=><Redirect to="/login" />} />
+  console.log("AUTH:", isAuth);
+  console.log("LOADING:", state.loading);
+  
+  return <Route {...props} component={isAuth && !state.laoding ? component : () => <Redirect to="/login" />} />
 
 }
 

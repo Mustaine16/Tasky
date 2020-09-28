@@ -8,6 +8,7 @@ const initialState = {
   userId: "",
   category: { title: "" },
   tasks: [],
+  selected:false,
   loading: true,
   error: false
 }
@@ -20,6 +21,7 @@ const dashboardReducer = (state, action) => {
     case "INIT_LOADING":
       return {
         ...state,
+        selected:true,
         loading: true
       };
 
@@ -35,6 +37,14 @@ const dashboardReducer = (state, action) => {
         ...state,
         tasks: [
           ...state.tasks,
+          action.payload
+        ]
+      }
+
+    case "UPDATE_TASK":
+      return {
+        ...state,
+        tasks: [
           action.payload
         ]
       }
@@ -61,7 +71,7 @@ const DashboardProvider = ({ children }) => {
     const fetchDashboard = async () => {
 
       dispatch({
-        type:"INIT_LOADING"
+        type: "INIT_LOADING"
       })
 
       try {
@@ -71,12 +81,10 @@ const DashboardProvider = ({ children }) => {
             credentials: "include"
           }
         )
-        
-        if(!response.ok) throw new Error()
-        
-        const { dashboard } = await response.json();
 
-        console.log(dashboard);
+        if (!response.ok) throw new Error()
+
+        const { dashboard } = await response.json();
 
         dispatch({
           type: "SET_DASHBOARD",
@@ -84,31 +92,32 @@ const DashboardProvider = ({ children }) => {
         })
 
       } catch (error) {
-        console.log("ERROR IN DASHBOARDCONTEXT", error);
+        console.log("ERROR IN DASHBOARDCONTEXT", error)
         dispatch({
-          type:"ERROR"
+          type: "ERROR"
         })
-        
+
       }
     }
-    fetchDashboard();
-  }, [])
+    id && fetchDashboard();
+  }, [id])
 
 
   // RENDERS
 
-  if(state.error) return "ERROR LOADING DASHBOARD"
+  // if (state.error) return "ERROR LOADING DASHBOARD"
+
+  // if(!state.selected) return "Select one"
 
   return (
-    <DashboardContext.Provider value={{state,dispatch}}>
-      {state.loading ? "loading Dashboard" : children}
+    <DashboardContext.Provider value={{ state, dispatch }}>
+      {children}
     </DashboardContext.Provider>
   )
 }
 
 const useDashboardContext = () => {
   const context = useContext(DashboardContext)
-  console.log(context);
 
   if (!context) throw new Error("useDashboardContext must be within a DashboardContextProvider")
 

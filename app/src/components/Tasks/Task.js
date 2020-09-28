@@ -1,13 +1,21 @@
 import React from 'react';
-import { Link } from "react-router-dom"
+import styled from "styled-components"
 
-const Task = ({ id, name, description, category }) => {
+const Styled= {
+  Task: styled.li`
+    padding:3px;
+    background:var(--task);
+    border-radius:3px;
+  `
+}
+
+const Task = ({ id, title, description, category }) => {
   return (
-    <li>
-      <h1>{name}</h1>
-      <h2>{description}</h2>
-      <h3>{category ? category.title : ""}</h3>
-    </li>
+    <Styled.Task>
+      <h3>{title}</h3>
+      <h4>{description}</h4>
+      <h5>{category ? category.title : ""}</h5>
+    </Styled.Task>
   )
 }
 
